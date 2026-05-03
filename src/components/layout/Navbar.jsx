@@ -58,6 +58,16 @@ export default function Navbar() {
                                     </Link>
                                 </>
                             )}
+                            {role === 'ADMIN' && (
+                                <>
+                                    <Link to="/admin" className="text-sm text-neutral-600 hover:text-neutral-900 transition-colors">
+                                        Pending Products
+                                    </Link>
+                                    <Link to="/admin/orders" className="text-sm text-neutral-600 hover:text-neutral-900 transition-colors">
+                                        All Orders
+                                    </Link>
+                                </>
+                            )}
                             <span className="text-xs text-neutral-400 bg-neutral-100 px-2 py-0.5 rounded">
                                 {role}
                             </span>

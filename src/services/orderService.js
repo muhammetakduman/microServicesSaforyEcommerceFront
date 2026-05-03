@@ -46,4 +46,11 @@ export const orderService = {
         apiFetch(`/api/orders/seller/items/${orderItemId}/status?sellerId=${sellerId}&status=${status}`, {
             method: 'PUT',
         }),
+
+    // ADMIN
+    getAllOrders: () =>
+        apiFetch('/api/orders/admin'),
+
+    forceUpdateOrderStatus: (orderId, status) =>
+        apiFetch(`/api/orders/admin/${orderId}/status?status=${status}`, { method: 'PUT' }),
 };

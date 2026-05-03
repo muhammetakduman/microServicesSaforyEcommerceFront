@@ -46,4 +46,14 @@ export const productService = {
             body: { stock },
             extraHeaders: { 'X-Seller-Id': sellerId },
         }),
+
+    // ADMIN
+    getPendingProducts: ({ page = 0, size = 20 } = {}) =>
+        apiFetch('/api/products/admin/pending', { params: { page, size } }),
+
+    approveProduct: (productId) =>
+        apiFetch(`/api/products/admin/${productId}/approve`, { method: 'PUT' }),
+
+    rejectProduct: (productId) =>
+        apiFetch(`/api/products/admin/${productId}/reject`, { method: 'PUT' }),
 };
