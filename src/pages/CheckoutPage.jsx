@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { clearCartState } from '../store/slices/cartSlice';
 import { setCurrentOrder } from '../store/slices/orderSlice';
+import { decrementProductStock } from '../store/slices/productSlice';
 import { orderService } from '../services/orderService';
 
 export default function CheckoutPage() {
@@ -39,6 +40,9 @@ export default function CheckoutPage() {
             });
             dispatch(setCurrentOrder(data));
             dispatch(clearCartState());
+            dispatch(decrementProductStock(
+                items.map(i => ({ productId: i.productId, quantity: i.quantity }))
+            ));
             navigate('/orders');
         } catch (err) {
             setError(err.message || 'Siparis olusturulamadi.');

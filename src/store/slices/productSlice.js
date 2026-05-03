@@ -29,8 +29,19 @@ const productSlice = createSlice({
         setError(state, action) {
             state.error = action.payload;
         },
+        // Optimistically reduce stock after order placement
+        decrementProductStock(state, action) {
+            // action.payload: [{ productId, quantity }]
+            action.payload.forEach(({ productId, quantity }) => {
+                const item = state.items.find(p => p.id === productId);
+                if (item) item.stock = Math.max(0, (item.stock ?? 0) - quantity);
+                if (state.selectedProduct?.id === productId) {
+                    state.selectedProduct.stock = Math.max(0, (state.selectedProduct.stock ?? 0) - quantity);
+                }
+            });
+        },
     },
 });
 
-export const { setProducts, setSelectedProduct, setLoading, setError } = productSlice.actions;
+export const { setProducts, setSelectedProduct, setLoading, setError, decrementProductStock } = productSlice.actions;
 export default productSlice.reducer;
