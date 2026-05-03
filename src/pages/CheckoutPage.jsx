@@ -5,12 +5,13 @@ import { clearCartState } from '../store/slices/cartSlice';
 import { setCurrentOrder } from '../store/slices/orderSlice';
 import { decrementProductStock } from '../store/slices/productSlice';
 import { orderService } from '../services/orderService';
+import { paymentService } from '../services/paymentService';
 
 export default function CheckoutPage() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const { items, totalAmount } = useSelector(state => state.cart);
-    const { userId } = useSelector(state => state.auth);
+    const { userId, email } = useSelector(state => state.auth);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
 
@@ -26,7 +27,8 @@ export default function CheckoutPage() {
         setLoading(true);
         setError('');
         try {
-            const data = await orderService.create({
+            // Adim 1: Siparisi olustur
+            const orderData = await orderService.create({
                 customerId: userId,
                 items: items.map(i => ({
                     productId: i.productId,
@@ -36,16 +38,30 @@ export default function CheckoutPage() {
                     quantity: i.quantity,
                 })),
                 shippingDetails: shipping,
-                paymentInfo: payment,
             });
-            dispatch(setCurrentOrder(data));
+
+            // Adim 2: Odemeyi dogrudan baslat (items ile stok takibi icin)
+            await paymentService.initPayment({
+                orderId: orderData.id,
+                customerId: userId,
+                amount: totalAmount,
+                cardNumber: payment.cardNumber,
+                cardHolderName: payment.cardHolderName,
+                expireMonth: payment.expireMonth,
+                expireYear: payment.expireYear,
+                cvc: payment.cvc,
+                customerEmail: email,
+                items: items.map(i => ({ productId: i.productId, quantity: i.quantity })),
+            });
+
+            dispatch(setCurrentOrder(orderData));
             dispatch(clearCartState());
             dispatch(decrementProductStock(
                 items.map(i => ({ productId: i.productId, quantity: i.quantity }))
             ));
             navigate('/orders');
         } catch (err) {
-            setError(err.message || 'Siparis olusturulamadi.');
+            setError(err.message || 'Siparis veya odeme tamamlanamadi.');
         } finally {
             setLoading(false);
         }
