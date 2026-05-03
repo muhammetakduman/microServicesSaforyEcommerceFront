@@ -3,6 +3,7 @@ import { useDispatch } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import { setCredentials } from '../store/slices/authSlice';
 import { authService } from '../services/authService';
+import logo from '../assets/LOGO.svg';
 
 export default function LoginPage() {
     const dispatch = useDispatch();
@@ -26,58 +27,70 @@ export default function LoginPage() {
             }));
             navigate('/');
         } catch (err) {
-            setError(err.message || 'E-posta veya şifre hatalı.');
+            setError(err.message || 'E-posta veya sifre hatali.');
         } finally {
             setLoading(false);
         }
     };
 
     return (
-        <div className="max-w-sm mx-auto mt-16">
-            <h1 className="text-xl font-semibold text-neutral-900 mb-1">Giriş Yap</h1>
-            <p className="text-sm text-neutral-400 mb-6">Hesabına giriş yap.</p>
+        <div className="max-w-sm mx-auto mt-12">
+            {/* Logo */}
+            <div className="flex flex-col items-center mb-8">
+                <img src={logo} alt="Safory" className="h-14 w-auto mb-3" />
+                <h1 className="text-xl font-bold text-neutral-900">Safory Ecommerce</h1>
+                <p className="text-sm text-neutral-400 mt-1">Hesabina giris yap</p>
+            </div>
 
-            <form onSubmit={handleSubmit} className="space-y-4">
-                <div>
-                    <label className="block text-sm text-neutral-600 mb-1">E-posta</label>
-                    <input
-                        type="email"
-                        required
-                        autoComplete="email"
-                        value={form.email}
-                        onChange={e => setForm({ ...form, email: e.target.value })}
-                        className="w-full border border-neutral-200 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-neutral-400"
-                    />
-                </div>
-                <div>
-                    <label className="block text-sm text-neutral-600 mb-1">Şifre</label>
-                    <input
-                        type="password"
-                        required
-                        autoComplete="current-password"
-                        value={form.password}
-                        onChange={e => setForm({ ...form, password: e.target.value })}
-                        className="w-full border border-neutral-200 rounded-md px-3 py-2 text-sm focus:outline-none focus:border-neutral-400"
-                    />
-                </div>
+            <div className="bg-white border border-neutral-200 rounded-xl p-7 shadow-sm">
+                <form onSubmit={handleSubmit} className="space-y-4">
+                    <div>
+                        <label className="block text-sm font-medium text-neutral-700 mb-1">E-posta</label>
+                        <input
+                            type="email"
+                            required
+                            autoComplete="email"
+                            value={form.email}
+                            onChange={e => setForm({ ...form, email: e.target.value })}
+                            className="w-full border border-neutral-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-neutral-300 focus:border-neutral-400 transition"
+                            placeholder="ornek@mail.com"
+                        />
+                    </div>
+                    <div>
+                        <label className="block text-sm font-medium text-neutral-700 mb-1">Sifre</label>
+                        <input
+                            type="password"
+                            required
+                            autoComplete="current-password"
+                            value={form.password}
+                            onChange={e => setForm({ ...form, password: e.target.value })}
+                            className="w-full border border-neutral-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-neutral-300 focus:border-neutral-400 transition"
+                            placeholder="Sifreniz"
+                        />
+                    </div>
 
-                {error && <p className="text-sm text-red-500">{error}</p>}
+                    {error && (
+                        <div className="bg-red-50 border border-red-200 text-red-600 text-sm px-3 py-2 rounded-lg">
+                            {error}
+                        </div>
+                    )}
 
-                <button
-                    type="submit"
-                    disabled={loading}
-                    className="w-full bg-neutral-900 text-white py-2.5 rounded-md text-sm font-medium hover:bg-neutral-700 transition-colors disabled:opacity-50"
-                >
-                    {loading ? 'Giriş yapılıyor...' : 'Giriş Yap'}
-                </button>
-            </form>
+                    <button
+                        type="submit"
+                        disabled={loading}
+                        className="w-full bg-neutral-900 text-white py-2.5 rounded-lg text-sm font-semibold hover:bg-neutral-700 transition-colors disabled:opacity-50 mt-1"
+                    >
+                        {loading ? 'Giris yapiliyor...' : 'Giris Yap'}
+                    </button>
+                </form>
 
-            <p className="text-sm text-neutral-500 mt-4 text-center">
-                Hesabın yok mu?{' '}
-                <Link to="/register" className="text-neutral-900 underline">
-                    Kayıt ol
-                </Link>
-            </p>
+                <p className="text-sm text-neutral-500 mt-5 text-center">
+                    Hesabin yok mu?{' '}
+                    <Link to="/register" className="text-neutral-900 font-semibold hover:underline">
+                        Kayit ol
+                    </Link>
+                </p>
+            </div>
         </div>
     );
 }

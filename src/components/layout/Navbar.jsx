@@ -4,6 +4,7 @@ import { logout } from '../../store/slices/authSlice';
 import { clearCartState } from '../../store/slices/cartSlice';
 import { selectCartCount } from '../../store/slices/cartSlice';
 import { authService } from '../../services/authService';
+import logo from '../../assets/LOGO.svg';
 
 export default function Navbar() {
     const dispatch = useDispatch();
@@ -18,23 +19,31 @@ export default function Navbar() {
         navigate('/');
     };
 
+    const navLink = 'text-sm text-neutral-500 hover:text-neutral-900 transition-colors font-medium';
+
     return (
-        <nav className="bg-white border-b border-neutral-200 sticky top-0 z-50">
-            <div className="max-w-6xl mx-auto px-4 h-14 flex items-center justify-between">
-                <Link to="/" className="text-base font-semibold text-neutral-900 tracking-tight">
-                    ShopHub
+        <nav className="bg-white border-b border-neutral-200 sticky top-0 z-50 shadow-sm">
+            <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
+
+                {/* Brand */}
+                <Link to="/" className="flex items-center gap-2.5 group">
+                    <img src={logo} alt="Safory" className="h-8 w-auto" />
+                    <span className="text-base font-bold text-neutral-900 tracking-tight group-hover:text-neutral-700 transition-colors">
+                        Safory<span className="text-neutral-400 font-normal">Ecommerce</span>
+                    </span>
                 </Link>
 
-                <div className="flex items-center gap-6">
-                    <Link to="/products" className="text-sm text-neutral-600 hover:text-neutral-900 transition-colors">
-                        Products
+                {/* Nav links */}
+                <div className="flex items-center gap-7">
+                    <Link to="/products" className={navLink}>
+                        Ürünler
                     </Link>
 
                     {isAuthenticated && role === 'CUSTOMER' && (
-                        <Link to="/cart" className="relative text-sm text-neutral-600 hover:text-neutral-900 transition-colors">
-                            Cart
+                        <Link to="/cart" className={`${navLink} relative`}>
+                            Sepet
                             {cartCount > 0 && (
-                                <span className="absolute -top-2 -right-3 bg-neutral-800 text-white text-xs w-4 h-4 rounded-full flex items-center justify-center font-medium">
+                                <span className="absolute -top-2 -right-4 bg-neutral-900 text-white text-xs w-4 h-4 rounded-full flex items-center justify-center font-semibold">
                                     {cartCount}
                                 </span>
                             )}
@@ -42,53 +51,48 @@ export default function Navbar() {
                     )}
 
                     {isAuthenticated ? (
-                        <div className="flex items-center gap-4">
+                        <div className="flex items-center gap-5">
                             {role === 'CUSTOMER' && (
-                                <Link to="/orders" className="text-sm text-neutral-600 hover:text-neutral-900 transition-colors">
-                                    Orders
+                                <Link to="/orders" className={navLink}>
+                                    Siparişlerim
                                 </Link>
                             )}
                             {role === 'SELLER' && (
                                 <>
-                                    <Link to="/seller" className="text-sm text-neutral-600 hover:text-neutral-900 transition-colors">
-                                        My Products
-                                    </Link>
-                                    <Link to="/seller/orders" className="text-sm text-neutral-600 hover:text-neutral-900 transition-colors">
-                                        Sales
-                                    </Link>
+                                    <Link to="/seller" className={navLink}>Ürünlerim</Link>
+                                    <Link to="/seller/orders" className={navLink}>Satışlarım</Link>
                                 </>
                             )}
                             {role === 'ADMIN' && (
                                 <>
-                                    <Link to="/admin" className="text-sm text-neutral-600 hover:text-neutral-900 transition-colors">
-                                        Pending Products
-                                    </Link>
-                                    <Link to="/admin/orders" className="text-sm text-neutral-600 hover:text-neutral-900 transition-colors">
-                                        All Orders
-                                    </Link>
+                                    <Link to="/admin" className={navLink}>Onay Bekleyenler</Link>
+                                    <Link to="/admin/orders" className={navLink}>Tüm Siparişler</Link>
                                 </>
                             )}
-                            <span className="text-xs text-neutral-400 bg-neutral-100 px-2 py-0.5 rounded">
-                                {role}
-                            </span>
-                            <span className="text-sm text-neutral-500 hidden sm:block">{email}</span>
-                            <button
-                                onClick={handleLogout}
-                                className="text-sm text-neutral-500 hover:text-neutral-900 transition-colors"
-                            >
-                                Logout
-                            </button>
+
+                            <div className="flex items-center gap-3 pl-3 border-l border-neutral-200">
+                                <div className="text-right hidden sm:block">
+                                    <p className="text-xs text-neutral-400 leading-none">{email}</p>
+                                    <p className="text-xs font-semibold text-neutral-600 mt-0.5">{role}</p>
+                                </div>
+                                <button
+                                    onClick={handleLogout}
+                                    className="text-xs border border-neutral-200 text-neutral-600 px-3 py-1.5 rounded-md hover:bg-neutral-100 transition-colors font-medium"
+                                >
+                                    Çıkış
+                                </button>
+                            </div>
                         </div>
                     ) : (
                         <div className="flex items-center gap-3">
-                            <Link to="/login" className="text-sm text-neutral-600 hover:text-neutral-900 transition-colors">
-                                Login
+                            <Link to="/login" className={navLink}>
+                                Giriş Yap
                             </Link>
                             <Link
                                 to="/register"
-                                className="text-sm bg-neutral-900 text-white px-4 py-1.5 rounded-md hover:bg-neutral-700 transition-colors"
+                                className="text-sm bg-neutral-900 text-white px-4 py-2 rounded-md hover:bg-neutral-700 transition-colors font-medium"
                             >
-                                Register
+                                Kayıt Ol
                             </Link>
                         </div>
                     )}
